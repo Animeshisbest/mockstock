@@ -19,6 +19,7 @@ function App() {
   const [portfolio, setPortfolio] = useState({});
   const [history, setHistory] = useState([]);
   const [activeTab, setActiveTab] = useState('market');
+  const [feedback, setFeedback] = useState({ type: 'bug', subject: '', message: '' });
 
   // Simulate market price changes
   useEffect(() => {
@@ -107,6 +108,15 @@ function App() {
     return stockValue + balance;
   };
 
+  const handleFeedbackSubmit = (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`[MockStock ${feedback.type.toUpperCase()}] ${feedback.subject}`);
+    const body = encodeURIComponent(feedback.message);
+    window.location.href = `mailto:animeshgarg.2011@gmail.com?subject=${subject}&body=${body}`;
+    alert('Thank you! Your email client should open now to send the feedback.');
+    setFeedback({ type: 'bug', subject: '', message: '' });
+  };
+
   return (
     <div className="bg-dark text-light min-vh-100 pb-5">
       {/* Navbar */}
@@ -131,7 +141,7 @@ function App() {
 
       <div className="container">
         {/* Navigation Tabs */}
-        <div className="nav nav-pills mb-4 bg-black p-2 rounded-3 border border-secondary d-inline-flex">
+        <div className="nav nav-pills mb-4 bg-black p-2 rounded-3 border border-secondary d-inline-flex flex-wrap">
           <button 
             className={`nav-link ${activeTab === 'market' ? 'active' : 'text-light'}`}
             onClick={() => setActiveTab('market')}
@@ -149,6 +159,12 @@ function App() {
             onClick={() => setActiveTab('history')}
           >
             History
+          </button>
+          <button 
+            className={`nav-link ${activeTab === 'feedback' ? 'active' : 'text-light'}`}
+            onClick={() => setActiveTab('feedback')}
+          >
+            Feedback
           </button>
         </div>
 
@@ -246,6 +262,66 @@ function App() {
                   ))
                 )}
               </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Feedback View */}
+        {activeTab === 'feedback' && (
+          <div className="row justify-content-center">
+            <div className="col-md-8">
+              <div className="card bg-black border-secondary">
+                <div className="card-header border-secondary bg-transparent">
+                  <h4 className="mb-0">Send Feedback</h4>
+                </div>
+                <div className="card-body">
+                  <p className="text-secondary mb-4">
+                    Found a bug? Have an idea for a new feature? Let us know! 
+                    Submitting this form will open your default email client.
+                  </p>
+                  <form onSubmit={handleFeedbackSubmit}>
+                    <div className="mb-3">
+                      <label className="form-label text-secondary">Feedback Type</label>
+                      <select 
+                        className="form-select bg-dark text-light border-secondary"
+                        value={feedback.type}
+                        onChange={(e) => setFeedback({...feedback, type: e.target.value})}
+                      >
+                        <option value="bug">Report a Bug</option>
+                        <option value="suggestion">Feature Suggestion</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label text-secondary">Subject</label>
+                      <input 
+                        type="text" 
+                        className="form-control bg-dark text-light border-secondary"
+                        placeholder="Brief summary..."
+                        value={feedback.subject}
+                        onChange={(e) => setFeedback({...feedback, subject: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label text-secondary">Description</label>
+                      <textarea 
+                        className="form-control bg-dark text-light border-secondary"
+                        rows="5"
+                        placeholder="Describe the issue or idea in detail..."
+                        value={feedback.message}
+                        onChange={(e) => setFeedback({...feedback, message: e.target.value})}
+                        required
+                      ></textarea>
+                    </div>
+                    <div className="d-grid">
+                      <button type="submit" className="btn btn-primary">
+                        <i className="bi bi-send me-2"></i>
+                        Send Feedback
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         )}
