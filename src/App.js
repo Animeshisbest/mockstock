@@ -11,6 +11,12 @@ const INITIAL_STOCKS = [
   { id: 'AMZN', name: 'Amazon.com Inc.', price: 3400.00, change: 0 },
   { id: 'TSLA', name: 'Tesla Inc.', price: 700.00, change: 0 },
   { id: 'NFLX', name: 'Netflix Inc.', price: 500.00, change: 0 },
+  { id: 'NVDA', name: 'NVIDIA Corp.', price: 460.00, change: 0 },
+  { id: 'META', name: 'Meta Platforms', price: 320.00, change: 0 },
+  { id: 'AMD', name: 'Advanced Micro Devices', price: 110.00, change: 0 },
+  { id: 'INTC', name: 'Intel Corp.', price: 35.00, change: 0 },
+  { id: 'IBM', name: 'IBM', price: 140.00, change: 0 },
+  { id: 'ORCL', name: 'Oracle Corp.', price: 115.00, change: 0 },
 ];
 
 function App() {
@@ -108,13 +114,10 @@ function App() {
     return stockValue + balance;
   };
 
-  const handleFeedbackSubmit = (e) => {
-    e.preventDefault();
+  const getMailtoLink = () => {
     const subject = encodeURIComponent(`[MockStock ${feedback.type.toUpperCase()}] ${feedback.subject}`);
     const body = encodeURIComponent(feedback.message);
-    window.location.href = `mailto:animeshgarg.2011@gmail.com?subject=${subject}&body=${body}`;
-    alert('Thank you! Your email client should open now to send the feedback.');
-    setFeedback({ type: 'bug', subject: '', message: '' });
+    return `mailto:animeshgarg.2011@gmail.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -277,49 +280,56 @@ function App() {
                 <div className="card-body">
                   <p className="text-secondary mb-4">
                     Found a bug? Have an idea for a new feature? Let us know! 
-                    Submitting this form will open your default email client.
+                    Clicking the button below will open your email client.
                   </p>
-                  <form onSubmit={handleFeedbackSubmit}>
-                    <div className="mb-3">
-                      <label className="form-label text-secondary">Feedback Type</label>
-                      <select 
-                        className="form-select bg-dark text-light border-secondary"
-                        value={feedback.type}
-                        onChange={(e) => setFeedback({...feedback, type: e.target.value})}
-                      >
-                        <option value="bug">Report a Bug</option>
-                        <option value="suggestion">Feature Suggestion</option>
-                      </select>
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label text-secondary">Subject</label>
-                      <input 
-                        type="text" 
-                        className="form-control bg-dark text-light border-secondary"
-                        placeholder="Brief summary..."
-                        value={feedback.subject}
-                        onChange={(e) => setFeedback({...feedback, subject: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label text-secondary">Description</label>
-                      <textarea 
-                        className="form-control bg-dark text-light border-secondary"
-                        rows="5"
-                        placeholder="Describe the issue or idea in detail..."
-                        value={feedback.message}
-                        onChange={(e) => setFeedback({...feedback, message: e.target.value})}
-                        required
-                      ></textarea>
-                    </div>
-                    <div className="d-grid">
-                      <button type="submit" className="btn btn-primary">
-                        <i className="bi bi-send me-2"></i>
-                        Send Feedback
-                      </button>
-                    </div>
-                  </form>
+                  
+                  <div className="mb-3">
+                    <label className="form-label text-secondary">Feedback Type</label>
+                    <select 
+                      className="form-select bg-dark text-light border-secondary"
+                      value={feedback.type}
+                      onChange={(e) => setFeedback({...feedback, type: e.target.value})}
+                    >
+                      <option value="bug">Report a Bug</option>
+                      <option value="suggestion">Feature Suggestion</option>
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label text-secondary">Subject</label>
+                    <input 
+                      type="text" 
+                      className="form-control bg-dark text-light border-secondary"
+                      placeholder="Brief summary..."
+                      value={feedback.subject}
+                      onChange={(e) => setFeedback({...feedback, subject: e.target.value})}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label text-secondary">Description</label>
+                    <textarea 
+                      className="form-control bg-dark text-light border-secondary"
+                      rows="5"
+                      placeholder="Describe the issue or idea in detail..."
+                      value={feedback.message}
+                      onChange={(e) => setFeedback({...feedback, message: e.target.value})}
+                    ></textarea>
+                  </div>
+                  <div className="d-grid gap-2">
+                    <a 
+                      href={getMailtoLink()}
+                      className={`btn btn-primary ${(!feedback.subject || !feedback.message) ? 'disabled' : ''}`}
+                    >
+                      <i className="bi bi-send me-2"></i>
+                      Send Feedback via Email
+                    </a>
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-top border-secondary text-center">
+                    <small className="text-muted d-block mb-2">
+                      If the button above doesn't work, please email us directly at:
+                    </small>
+                    <code className="text-light user-select-all">animeshgarg.2011@gmail.com</code>
+                  </div>
                 </div>
               </div>
             </div>
